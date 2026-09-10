@@ -62,3 +62,16 @@ d. Turn on Max Audio DSP, start humming into your microphone, and use your webca
 [ ] Continuous Gestural Mapping: Map hand height (Y-axis) to transposition semitones and pinch distance to modulation/reverb depth.
 
 [ ] SMF Export Pipeline: Enable direct export of improvised vocal lines into standard MIDI files (SMF) for DAW integration.
+
+## 🚀 Quick Start
+
+1. **Run the Vision Module**:
+   - Execute the Python script to start the webcam feed and hand tracking:
+     ```bash
+     python src/python/MajorC1.py
+     ```
+   - The system tracks hand joint landmarks in real-time and dynamically displays **Major C** or **Minor C** text near your fingertips as you move your hand vertically.
+
+2. **Run the Audio Engine**:
+   - Open Max/MSP and load the patch file located at `src/max_msp/record-play-tonechange.maxpat`.
+   - Hum a melody, record audio, and move your hand to experience real-time gesture-controlled pitch shifting and audio synthesis.
