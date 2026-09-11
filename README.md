@@ -75,3 +75,8 @@ d. Turn on Max Audio DSP, start humming into your microphone, and use your webca
 2. **Run the Audio Engine**:
    - Open Max/MSP and load the patch file located at `src/max_msp/record-play-tonechange.maxpat`.
    - Hum a melody, record audio, and move your hand to experience real-time gesture-controlled pitch shifting and audio synthesis.
+
+   📈 Future Roadmap & Next Steps
+- [ ] **Pitch Tracking & Synth Conversion**: Replace direct audio-rate pitch shifting with real-time monophonic pitch tracking to convert hummed vocals into clean software synth notes.
+- [ ] **MIDI & Notation Pipeline**: Implement automated recording of note events and export to Standard MIDI Files (SMF) for seamless import into MuseScore or DAWs to generate clean five-line staff notation.
+- [ ] **Continuous Gestural Mapping**: Map hand parameters to filter cutoffs and modulation depth.
