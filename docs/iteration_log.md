@@ -21,6 +21,12 @@
 - **Jitter & Range Stabilization**: Inserted a `change` object to filter out MediaPipe gesture jitter and constrained the pitch transposition range using `clip -5 5` to maintain a natural vocal timbre centered around the root note.
 - **Architecture Expansion**: Initiated the design for a dual-track real-time system, planning an audio-to-MIDI transcription pipeline (using `sigmund~`) to convert hummed vocal motifs into synchronized piano notes.
 
+## 9/10
+Max Patch Logic Refinement: Optimized the data control flow by introducing a gate module to manage the index data stream, ensuring that scale configurations (coll scale_map) are fully loaded and injected via store messages before hand-gesture coordinate signals are allowed to pass.
+
+Workflow Strategy Evolution: Evaluated the acoustic limitations of real-time audio-rate pitch shifting on the human voice (such as formant smearing and metallic artifacts) and established a forward-looking architectural pivot toward instrument synthesis, pitch tracking, and automated MIDI/five-line staff notation (五线谱) export for future compositional workflows.
+
+
 ## Problems & Solutions
 - **Audio Engine / Groove Error**: Experienced severe static/noise artifacts when using `groove~` during recording playback, which was resolved by restarting Max.
 - **Sharp Transposed Audio**: Addressed high-frequency distortion and overly sharp pitch-shifted audio by replacing linear scaling with logarithmic frequency ratio calculations (`expr pow(2., $f1 / 12. )`) and symmetric range clipping (`clip -5 5`).
