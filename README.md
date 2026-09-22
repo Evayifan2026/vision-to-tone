@@ -2,81 +2,92 @@
 
 An interactive music prototyping tool that bridges computer vision, real-time OSC communication, and Digital Signal Processing (DSP) in Max/MSP to assist vocalists and composers in real-time melody sketching and pitch shifting.
 
-🚀 Project Overview
-VisionToTone allows a composer to use intuitive webcam-based hand gestures (tracked via Google MediaPipe) to control real-time vocal pitch-shifting and harmonization while humming melodies into Max/MSP via UDP/OSC.
+## 🚀 Project Overview
+VisionToTone allows a composer to use intuitive webcam-based hand gestures (tracked via Google MediaPipe) to control real-time vocal pitch-shifting, chord harmonization, and dynamic expression mapping while humming melodies into Max/MSP via UDP/OSC.
 
-Target Application: Music Technology, Computer Science & Creative Arts (intended for US Top 10 University Admissions portfolio).
-Developer:Eva Wang Grade 9 Student Developer.
+- **Target Application**: Music Technology, Computer Science & Creative Arts (intended for US Top 10 University Admissions portfolio).
+- **Developer**: Eva Wang (Grade 9 Student Developer).
+- **Project Status**: **Final Version Released (定版)**
 
- System Architecture & Tech Stack
+---
 
+## 🏗️ System Architecture & Tech Stack
+
+```text
 [Webcam Feed] 
       │
       ▼
-[Python + MediaPipe] ──(Hand Landmark Detection & Gesture Classification)
+[Python + MediaPipe + OpenCV] ──(Hand Landmark Detection & Expression Classification)
       │
-      ▼ (OSC Protocol over UDP - Port 8000)
+      ▼ (OSC Protocol over UDP - Port 8001)
 [Max / MSP] 
       │
-      ├── Audio Input (Microphone / Live Humming)
-      ├── Pre-filtering (Low-pass to remove breath/sibilance artifacts)
-      ├── Real-time Pitch Shifting & Harmonization (DSP)
-      └── Audio Output / MIDI Export Pipeline
+      ├── Audio Input & Dynamic Envelope (Fade-in/Fade-out for Expressive Phrasing)
+      ├── OSC Routing (/current_key, /current_chord, /current_expression)
+      ├── Real-time 3D Stage Background Color Sync (Happy / Sad Emotional Mapping)
+      └── Audio Output & Reverb Processing (Bpatcher bp.Reverb)
+```
 
-System Architecture & Tech Stack
+### Core Technologies
+- **Programming Language**: Python 3.10+
+- **Computer Vision & Protocols**: MediaPipe, OpenCV (`opencv-python`), `python-osc`, NumPy
+- **Audio Engineering Environment**: Max/MSP 8.x (Bpatchers, OSC routing, `sfplay~`, `jit.gl.render`, `jit.gl.graph`)
 
-Programming Language: Python 3.x[cite: 2]
-Computer Vision & Protocols: MediaPipe, OpenCV, `python-osc`
-Audio Engineering Environment: Max/MSP (`gizmo~`, `lores~`, OSC routing)
+---
 
+## 📁 Repository & Audio Asset Structure
+To ensure Max/MSP's `sfplay~` and Python scripts can successfully locate and play audio files, the project assets are organized under the following directory structure:
 
-✨ Key Features Implemented (Phase 1)
-- Real-time Computer Vision: High-fps hand landmark detection utilizing Google MediaPipe.
-- Gesture Classification: Distinguishes specific chord and scale intentions, such as C Major versus C Minor hand configurations.
-- Low-Latency OSC Bridge: Streams continuous control data from Python to Max/MSP over UDP.
-- Vocal Artifact Taming: Integrated pre-filtering and dynamic smoothing in Max/MSP to eliminate harsh high-frequency digital artifacts and sibilance during live pitch shifting.
+```text
+vision-to-tone/
+├── src/
+│   ├── python/                # Python vision tracking & OSC client scripts
+│   ├── max_msp/               # Max/MSP patches (.maxpat)
+│   └── audio_assets/          # 🎵 Directory for audio samples & generated WAV files
+│       ├── C_Major_loop.wav   # Pre-recorded vocal/instrument loops for C Major
+│       ├── Ab_Maj_loop.wav    # Pre-recorded loops for Ab Major
+│       └── dynamic_sketches/  # Python-generated or exported audio sketches
+```
 
-⚙️ Installation & Usage Guide
-1. Clone the Repository
-git clone [https://github.com/evayifan2026/vision-to-tone.git](https://github.com/evayifan2026/vision-to-tone.git)
+---
+
+## ✨ Key Features Implemented (Final Version)
+1. **Real-time Computer Vision & Expression Mapping**: High-fps hand tracking utilizing Google MediaPipe, dynamically classifying gestures into musical keys and emotional states (`Happy` / `Sad`).
+2. **Low-Latency OSC Bridge**: Streams continuous control data (key, chord, and expression state) from Python to Max/MSP over UDP (Port 8001).
+3. **Audio-Visual Emotional Synchronization**: Automatically shifts the 3D stage background color (`erase_color`) in Max/MSP's OpenGL window based on the user's real-time emotional expression.
+4. **Natural Expressive Phrasing (Dynamic Envelope)**: Implemented software-side amplitude envelopes (fade-in / fade-out) in Python audio generation to eliminate mechanical clicks and provide a natural "crescendo/decrescendo" vocal phrasing feel.
+
+---
+
+## ⚙️ Installation & Quick Start Guide
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/evayifan2026/vision-to-tone.git
 cd vision-to-tone
+```
 
-2. Python Environment Setup
-Ensure you have Python installed, then install the required computer vision and OSC dependencies:
+### 2. Python Environment Setup & Dependencies
+Ensure you have Python 3.10+ installed, then install the required libraries:
+```bash
 cd python
 pip install -r requirements.txt
-python hand_tracker.py
+```
 
-3. Max/MSP Setup
-a. Launch Max/MSP.
+### 3. Running the Project
+- **Step 1 (Vision Module)**:
+  ```bash
+  python src/python/VisonToTone_V1.py
+  ```
+- **Step 2 (Audio Engine)**:
+  Open Max/MSP, load the patch located at `src/max_msp/VisonToTone_V1.maxpat`, verify the UDP port is set to `8001`, ensure your audio samples are correctly referenced from `src/audio_assets/`, turn on Audio DSP, and interact via webcam and audio!
 
-b. Open the patch located in max_msp/hum_pitch_shift.maxpat.
+---
 
-c. Ensure the OSC receiver port matches your Python script configuration (default: 8000).
-
-d. Turn on Max Audio DSP, start humming into your microphone, and use your webcam gestures (Press Esc to exit the Python capture window) to alter the pitch in real time!
-
-📈 Future Roadmap & Next Steps
-[ ] Audio-to-MIDI Integration: Implement real-time monophonic pitch tracking to convert hummed audio directly into live MIDI scores.
-
-[ ] Continuous Gestural Mapping: Map hand height (Y-axis) to transposition semitones and pinch distance to modulation/reverb depth.
-
-[ ] SMF Export Pipeline: Enable direct export of improvised vocal lines into standard MIDI files (SMF) for DAW integration.
-
-## 🚀 Quick Start
-
-1. **Run the Vision Module**:
-   - Execute the Python script to start the webcam feed and hand tracking:
-     ```bash
-     python src/python/MajorC1.py
-     ```
-   - The system tracks hand joint landmarks in real-time and dynamically displays **Major C** or **Minor C** text near your fingertips as you move your hand vertically.
-
-2. **Run the Audio Engine**:
-   - Open Max/MSP and load the patch file located at `src/max_msp/record-play-tonechange.maxpat`.
-   - Hum a melody, record audio, and move your hand to experience real-time gesture-controlled pitch shifting and audio synthesis.
-
-   📈 Future Roadmap & Next Steps
-- [ ] **Pitch Tracking & Synth Conversion**: Replace direct audio-rate pitch shifting with real-time monophonic pitch tracking to convert hummed vocals into clean software synth notes.
+## 📈 Future Roadmap & Next Steps
+- [ ] **Pitch Tracking & Synth Conversion**: Replace direct audio-rate playback with real-time monophonic pitch tracking to convert hummed vocals into clean software synth notes.
 - [ ] **MIDI & Notation Pipeline**: Implement automated recording of note events and export to Standard MIDI Files (SMF) for seamless import into MuseScore or DAWs to generate clean five-line staff notation.
-- [ ] **Continuous Gestural Mapping**: Map hand parameters to filter cutoffs and modulation depth.
+- [ ] **Continuous Gestural Mapping**: Map hand parameters directly to filter cutoffs and reverb depth.
+
+🙏 Acknowledgments & AI Assistance Notice
+Parts of the boilerplate code, configuration templates, and debugging scripts in this project were developed with the assistance of AI-powered coding tools (such as Google Gemini), under the direct architectural design, creative direction, and implementation of the author (Eva Wang)
